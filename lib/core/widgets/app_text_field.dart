@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/app_colors.dart';
+import '../utils/text_style.dart';
 
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -48,13 +49,12 @@ class AppTextField extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            style: TextStyleHelper.labelMedium.copyWith(
               color: AppColors.textPrimary,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppConstants.paddingSmall),
         ],
         TextFormField(
           controller: controller,
@@ -74,15 +74,13 @@ class AppTextField extends StatelessWidget {
               FocusScope.of(context).requestFocus(nextFocus);
             }
           },
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
+          style: TextStyleHelper.labelMedium.copyWith(
             color: AppColors.textPrimary,
+            fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(
-              fontSize: 14,
+            hintStyle: TextStyleHelper.bodySmall.copyWith(
               color: AppColors.textSecondary,
               fontWeight: FontWeight.w400,
             ),

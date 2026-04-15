@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class BlogPostCard extends StatelessWidget {
   final String title;
@@ -17,7 +18,7 @@ class BlogPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppConstants.paddingMedium),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -52,7 +53,7 @@ class BlogPostCard extends StatelessWidget {
               children: [
                 Text(
                   date,
-                  style: const TextStyle(
+                  style: TextStyleHelper.labelSmall.copyWith(
                     fontSize: 12,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
@@ -63,7 +64,7 @@ class BlogPostCard extends StatelessWidget {
                   title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyleHelper.labelMedium.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
@@ -74,7 +75,7 @@ class BlogPostCard extends StatelessWidget {
                   description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyleHelper.bodySmall.copyWith(
                     fontSize: 13,
                     color: AppColors.textSecondary,
                   ),

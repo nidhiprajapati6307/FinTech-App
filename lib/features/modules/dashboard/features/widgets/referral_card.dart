@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class ReferralCard extends StatelessWidget {
   final String referralCode;
@@ -33,18 +34,18 @@ class ReferralCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Invite friends and earn rewards',
-            style: TextStyle(
+            style: TextStyleHelper.labelLarge.copyWith(
               fontSize: 17,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Share your referral code and invite link to earn bonuses.',
-            style: TextStyle(
+            style: TextStyleHelper.bodySmall.copyWith(
               color: AppColors.textSecondary,
               fontSize: 13,
             ),
@@ -66,7 +67,7 @@ class ReferralCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Code: $referralCode',
-                    style: const TextStyle(
+                    style: TextStyleHelper.labelMedium.copyWith(
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
@@ -84,7 +85,7 @@ class ReferralCard extends StatelessWidget {
             ),
             child: Text(
               referralLink,
-              style: const TextStyle(
+              style: TextStyleHelper.bodySmall.copyWith(
                 fontSize: 13,
                 color: AppColors.textSecondary,
               ),
@@ -104,9 +105,9 @@ class ReferralCard extends StatelessWidget {
                 elevation: 0,
               ),
               icon: const Icon(Icons.share_rounded, color: Colors.white),
-              label: const Text(
+              label: Text(
                 'Invite Now',
-                style: TextStyle(
+                style: TextStyleHelper.labelMedium.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),

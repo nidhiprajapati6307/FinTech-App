@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class YoutubeCard extends StatelessWidget {
   final String title;
@@ -19,7 +20,7 @@ class YoutubeCard extends StatelessWidget {
     return Container(
       width: isSmallPhone ? 240 : 260,
       margin: const EdgeInsets.only(right: 14),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppConstants.paddingMedium),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -54,7 +55,7 @@ class YoutubeCard extends StatelessWidget {
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
+            style: TextStyleHelper.labelMedium.copyWith(
               fontWeight: FontWeight.w800,
               fontSize: isSmallPhone ? 14 : 15,
               color: AppColors.textPrimary,
@@ -66,7 +67,7 @@ class YoutubeCard extends StatelessWidget {
               subtitle,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: TextStyleHelper.bodySmall.copyWith(
                 color: AppColors.textSecondary,
                 fontSize: isSmallPhone ? 12 : 13,
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class QuickActionButton extends StatelessWidget {
   final String label;
@@ -59,7 +60,7 @@ class QuickActionButton extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: TextStyleHelper.labelMedium.copyWith(
                     fontSize: isSmallPhone ? 12 : 14,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,

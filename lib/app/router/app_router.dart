@@ -9,7 +9,7 @@ import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
-import '../../features/auth/presentation/screens/otp_verification_screen.dart';
+import '../../features/auth/presentation/screens/otp_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/reset_password_info_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
@@ -27,7 +27,8 @@ class AppRouter {
       refreshListenable: GoRouterRefreshStream(authBloc.stream),
       redirect: (context, state) {
         final authState = authBloc.state;
-        final onboardingCompleted = onboardingLocalService.isOnboardingCompleted();
+        final onboardingCompleted =
+        onboardingLocalService.isOnboardingCompleted();
 
         final currentPath = state.matchedLocation;
 
@@ -37,7 +38,9 @@ class AppRouter {
         final isRegister = currentPath == RouteNames.register;
         final isForgotPassword = currentPath == RouteNames.forgotPassword;
         final isOtp = currentPath == RouteNames.otp;
-        final isResetPasswordInfo = currentPath == RouteNames.resetPasswordInfo;
+        final isResetPasswordInfo =
+            currentPath == RouteNames.resetPasswordInfo;
+        final isResetPassword = currentPath == RouteNames.resetPassword;
         final isHome = currentPath == RouteNames.home;
         final isMainNavigation = currentPath == RouteNames.mainNavigation;
 
@@ -45,23 +48,20 @@ class AppRouter {
             isRegister ||
             isForgotPassword ||
             isOtp ||
-            isResetPasswordInfo;
+            isResetPasswordInfo ||
+            isResetPassword;
 
-        // Always allow splash to stay visible first
         if (isSplash) return null;
 
-        // While auth is loading, don't force redirects
         if (authState.status == AuthStatus.loading ||
             authState.status == AuthStatus.initial) {
           return null;
         }
 
-        // First launch -> onboarding
         if (!onboardingCompleted) {
           return isOnboarding ? null : RouteNames.onboarding;
         }
 
-        // Authenticated -> main navigation
         if (authState.status == AuthStatus.authenticated) {
           if (isAuthRoute || isOnboarding || isHome) {
             return RouteNames.mainNavigation;
@@ -69,7 +69,6 @@ class AppRouter {
           return null;
         }
 
-        // Unauthenticated -> login
         final isUnauthenticated =
             authState.status == AuthStatus.unauthenticated ||
                 authState.status == AuthStatus.error ||
@@ -109,11 +108,19 @@ class AppRouter {
         ),
         GoRoute(
           path: RouteNames.otp,
-          builder: (context, state) => const OtpVerificationScreen(),
+          builder: (context, state) => OtpVerificationScreen(
+            email: state.extra as String?,
+          ),
         ),
+        // GoRoute(
+        //   path: RouteNames.resetPasswordInfo,
+        //   builder: (context, state) => ResetPasswordInfoScreen(
+        //     email: state.extra as String?,
+        //   ),
+        // ),
         GoRoute(
-          path: RouteNames.resetPasswordInfo,
-          builder: (context, state) => const ResetPasswordInfoScreen(),
+          path: RouteNames.resetPassword,
+          builder: (context, state) => const ResetPasswordScreen(),
         ),
         GoRoute(
           path: RouteNames.mainNavigation,

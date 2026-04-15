@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class DashboardSectionTitle extends StatelessWidget {
   final String title;
@@ -20,7 +21,7 @@ class DashboardSectionTitle extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyleHelper.labelLarge.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
@@ -32,7 +33,7 @@ class DashboardSectionTitle extends StatelessWidget {
             onTap: onActionTap,
             child: Text(
               actionText!,
-              style: const TextStyle(
+              style: TextStyleHelper.labelSmall.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primaryBlue,

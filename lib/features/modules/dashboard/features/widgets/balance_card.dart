@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class BalanceCard extends StatelessWidget {
   final String title;
@@ -54,7 +54,7 @@ class BalanceCard extends StatelessWidget {
           const SizedBox(height: 18),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyleHelper.labelMedium.copyWith(
               color: Colors.white70,
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -63,7 +63,7 @@ class BalanceCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             amount,
-            style: TextStyle(
+            style: TextStyleHelper.titleMedium.copyWith(
               color: Colors.white,
               fontSize: isTablet ? 28 : 25,
               fontWeight: FontWeight.w800,
@@ -72,7 +72,7 @@ class BalanceCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyleHelper.bodySmall.copyWith(
               color: Colors.white70,
               fontSize: 13,
             ),

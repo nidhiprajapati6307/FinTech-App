@@ -49,12 +49,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       backgroundColor: AppColors.lightBlueBg,
       body: AuthShell(
         title: 'Forgot Password',
-        subtitle: 'Enter your email and we will send a password reset link.',
+        subtitle: 'Enter your email and we will send an OTP to your email.',
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state.status == AuthStatus.passwordResetEmailSent) {
               context.go(
-                RouteNames.resetPasswordInfo,
+                RouteNames.otp,
                 extra: _emailController.text.trim(),
               );
             }
@@ -149,7 +149,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             else
                               CommonPrimaryButton(
                                 text: 'Send OTP',
-                                icon: Icons.send_rounded,
+                                icon: Icons.mail_outline_rounded,
                                 onPressed: _submitForgotPassword,
                               ),
                           ],

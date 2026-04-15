@@ -56,7 +56,6 @@ Future<void> configureDependencies() async {
     getIt.registerLazySingleton<AuthRemoteDataSource>(
           () => AuthRemoteDataSourceImpl(
         firebaseAuth: getIt<FirebaseAuth>(),
-        firestore: getIt<FirebaseFirestore>(),
       ),
     );
   }
@@ -65,7 +64,6 @@ Future<void> configureDependencies() async {
     getIt.registerLazySingleton<AuthRepository>(
           () => AuthRepositoryImpl(
         remoteDataSource: getIt<AuthRemoteDataSource>(),
-        localDataSource: getIt<AuthLocalDataSource>(),
       ),
     );
   }

@@ -1,31 +1,39 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/user_entity.dart';
-import '../models/user_model.dart';
 import 'auth_remote_data_source.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
-  final FirebaseFirestore firestore;
 
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
-    required this.firestore,
   });
 
-  CollectionReference<Map<String, dynamic>> get _usersCollection =>
-      firestore.collection('users');
+  @override
+  Future<AppUser> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final credential = await firebaseAuth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
 
-  Future<UserModel> _getUserProfile(String uid) async {
-    final doc = await _usersCollection.doc(uid).get();
+      final user = credential.user;
+      if (user == null) {
+        throw Exception('Login failed. User not found.');
+      }
 
-    if (!doc.exists || doc.data() == null) {
-      throw ServerException('User profile not found in Firestore');
+      return AppUser(
+        uid: user.uid,
+        email: user.email ?? '',
+        fullName: user.displayName ?? '',
+      );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseError(e));
     }
-
-    return UserModel.fromFirestore(doc.data()!, doc.id);
   }
 
   @override
@@ -36,77 +44,41 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     try {
       final credential = await firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: email.trim(),
+        password: password.trim(),
       );
 
-      final firebaseUser = credential.user;
-      if (firebaseUser == null) {
-        throw ServerException('Registration failed');
+      final user = credential.user;
+      if (user == null) {
+        throw Exception('Registration failed. User not created.');
       }
 
-      await firebaseUser.updateDisplayName(fullName);
+      await user.updateDisplayName(fullName);
 
-      final userModel = UserModel(
-        uid: firebaseUser.uid,
-        email: email,
+      return AppUser(
+        uid: user.uid,
+        email: user.email ?? '',
         fullName: fullName,
       );
-
-      await _usersCollection.doc(firebaseUser.uid).set(userModel.toFirestore());
-
-      return userModel;
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Registration failed');
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
-
-  @override
-  Future<AppUser> login({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final credential = await firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final firebaseUser = credential.user;
-      if (firebaseUser == null) {
-        throw ServerException('Login failed');
-      }
-
-      return await _getUserProfile(firebaseUser.uid);
-    } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Login failed');
-    } catch (e) {
-      throw ServerException(e.toString());
+      throw Exception(_mapFirebaseError(e));
     }
   }
 
   @override
   Future<void> forgotPassword(String email) async {
     try {
-      await firebaseAuth.sendPasswordResetEmail(email: email);
+      await firebaseAuth.sendPasswordResetEmail(
+        email: email.trim(),
+      );
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Failed to send reset email');
-    } catch (e) {
-      throw ServerException(e.toString());
+      throw Exception(_mapFirebaseError(e));
     }
   }
 
   @override
   Future<void> logout() async {
-    try {
-      await firebaseAuth.signOut();
-    } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Logout failed');
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
+    await firebaseAuth.signOut();
   }
 
   @override
@@ -114,27 +86,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final user = firebaseAuth.currentUser;
     if (user == null) return null;
 
-    return UserModel(
+    return AppUser(
       uid: user.uid,
-      email: user.email,
-      fullName: user.displayName,
+      email: user.email ?? '',
+      fullName: user.displayName ?? '',
     );
   }
 
   @override
   Stream<AppUser?> authStateChanges() {
-    return firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
-      if (firebaseUser == null) return null;
+    return firebaseAuth.authStateChanges().map((user) {
+      if (user == null) return null;
 
-      try {
-        return await _getUserProfile(firebaseUser.uid);
-      } catch (_) {
-        return UserModel(
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          fullName: firebaseUser.displayName,
-        );
-      }
+      return AppUser(
+        uid: user.uid,
+        email: user.email ?? '',
+        fullName: user.displayName ?? '',
+      );
     });
   }
 
@@ -143,25 +111,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String phoneNumber,
     required void Function(String verificationId) codeSent,
   }) async {
-    try {
-      await firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await firebaseAuth.signInWithCredential(credential);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          throw ServerException(e.message ?? 'OTP verification failed');
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          codeSent(verificationId);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
-    } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Failed to send OTP');
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
+    await firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await firebaseAuth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        throw Exception(_mapFirebaseError(e));
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        codeSent(verificationId);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
   @override
@@ -176,31 +138,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       final result = await firebaseAuth.signInWithCredential(credential);
-      final firebaseUser = result.user;
+      final user = result.user;
 
-      if (firebaseUser == null) {
-        throw ServerException('OTP verification failed');
+      if (user == null) {
+        throw Exception('OTP verification failed.');
       }
 
-      final doc = await _usersCollection.doc(firebaseUser.uid).get();
-
-      if (doc.exists && doc.data() != null) {
-        return UserModel.fromFirestore(doc.data()!, doc.id);
-      }
-
-      final userModel = UserModel(
-        uid: firebaseUser.uid,
-        email: firebaseUser.email,
-        fullName: firebaseUser.displayName,
+      return AppUser(
+        uid: user.uid,
+        email: user.email ?? '',
+        fullName: user.displayName ?? '',
       );
-
-      await _usersCollection.doc(firebaseUser.uid).set(userModel.toFirestore());
-
-      return userModel;
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message ?? 'Invalid OTP');
-    } catch (e) {
-      throw ServerException(e.toString());
+      throw Exception(_mapFirebaseError(e));
+    }
+  }
+
+  String _mapFirebaseError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'invalid-email':
+        return 'Invalid email address.';
+      case 'user-not-found':
+        return 'No user found with this email.';
+      case 'wrong-password':
+        return 'Incorrect password.';
+      case 'email-already-in-use':
+        return 'This email is already registered.';
+      case 'weak-password':
+        return 'Password is too weak.';
+      case 'network-request-failed':
+        return 'No internet connection.';
+      case 'too-many-requests':
+        return 'Too many attempts. Try again later.';
+      default:
+        return e.message ?? 'Something went wrong.';
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/utils/text_style.dart';
+
 class ProfileSettingTile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -37,7 +39,10 @@ class ProfileSettingTile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 6,
+        ),
         leading: CircleAvatar(
           radius: 22,
           backgroundColor: iconBgColor ?? const Color(0xffEEF2FF),
@@ -48,15 +53,16 @@ class ProfileSettingTile extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyleHelper.labelMedium.copyWith(
             fontWeight: FontWeight.w600,
             fontSize: 15,
+            color: Colors.black87,
           ),
         ),
         subtitle: subtitle != null
             ? Text(
           subtitle!,
-          style: TextStyle(
+          style: TextStyleHelper.bodySmall.copyWith(
             color: Colors.grey.shade600,
             fontSize: 13,
           ),

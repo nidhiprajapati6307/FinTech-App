@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../app/router/route_names.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/responsive.dart';
+import '../../../../../core/utils/text_style.dart';
 import '../../../../../core/widgets/primary_button.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
@@ -41,15 +42,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.white,
           title: Text(
             'Logout',
-            style: TextStyle(
+            style: TextStyleHelper.titleSmall.copyWith(
+              fontSize: isTablet ? 20 : 18,
               fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
-              fontSize: isTablet ? 20 : 18,
             ),
           ),
           content: Text(
             'Are you sure you want to logout?',
-            style: TextStyle(
+            style: TextStyleHelper.bodySmall.copyWith(
               color: AppColors.textSecondary,
               fontSize: isTablet ? 15 : 14,
             ),
@@ -57,9 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
+              child: Text(
                 'Cancel',
-                style: TextStyle(
+                style: TextStyleHelper.labelMedium.copyWith(
                   color: AppColors.primaryBlue,
                   fontWeight: FontWeight.w600,
                 ),
@@ -77,9 +78,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Logout',
-                style: TextStyle(color: Colors.white),
+                style: TextStyleHelper.labelMedium.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -119,7 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundColor: AppColors.primaryBlue,
                   content: Text(
                     state.message,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyleHelper.labelMedium.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               );
@@ -146,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final user = state.user;
 
               return SingleChildScrollView(
-                padding: screenPadding.copyWith(bottom: 24),
+                padding: screenPadding.copyWith(bottom: AppConstants.paddingLarge),
                 child: Center(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: maxWidth),
@@ -158,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Center(
                           child: Text(
                             'My Profile',
-                            style: TextStyle(
+                            style: TextStyleHelper.headlineSmall.copyWith(
                               fontSize: isTablet ? 28 : 24,
                               fontWeight: FontWeight.w800,
                               color: AppColors.textPrimary,
@@ -200,18 +206,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 radius: isTablet ? 54 : (isSmallPhone ? 42 : 46),
                                 backgroundColor: Colors.white,
                                 backgroundImage:
-                                user.photoUrl != null &&
-                                    user.photoUrl!.isNotEmpty
+                                user.photoUrl != null && user.photoUrl!.isNotEmpty
                                     ? NetworkImage(user.photoUrl!)
                                     : null,
-                                child:
-                                user.photoUrl == null ||
-                                    user.photoUrl!.isEmpty
+                                child: user.photoUrl == null || user.photoUrl!.isEmpty
                                     ? Icon(
                                   Icons.person,
-                                  size: isTablet
-                                      ? 54
-                                      : (isSmallPhone ? 42 : 46),
+                                  size: isTablet ? 54 : (isSmallPhone ? 42 : 46),
                                   color: AppColors.primaryBlue,
                                 )
                                     : null,
@@ -222,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: TextStyleHelper.titleSmall.copyWith(
                                   color: Colors.white,
                                   fontSize: isTablet ? 24 : 22,
                                   fontWeight: FontWeight.bold,
@@ -234,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: TextStyleHelper.bodySmall.copyWith(
                                   color: Colors.white70,
                                   fontSize: isTablet ? 15 : 14,
                                   height: textScale > 1.15 ? 1.35 : 1.2,
@@ -345,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       state.message,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: TextStyleHelper.bodyMedium.copyWith(
                         color: AppColors.textPrimary,
                         fontSize: isTablet ? 16 : 15,
                       ),
@@ -367,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         title,
-        style: TextStyle(
+        style: TextStyleHelper.labelLarge.copyWith(
           fontSize: isTablet ? 19 : 17,
           fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,

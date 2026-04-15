@@ -3,101 +3,150 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/responsive.dart';
-import '../../../../core/widgets/outline_button.dart';
+import '../../../../core/utils/text_style.dart';
+import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/back_circle_button.dart';
 import '../../../../core/widgets/primary_button.dart';
 
-class ResetPasswordInfoScreen extends StatelessWidget {
-  final String? email;
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
-  const ResetPasswordInfoScreen({
-    super.key,
-    this.email,
-  });
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  static const Color kTextLight = Color(0xFF6B7280);
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _resetPassword() {
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 6 characters')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Password reset successful')),
+    );
+
+    context.go(RouteNames.login);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final maxWidth = Responsive.maxFormWidth(context);
+    final isButtonEnabled = _passwordController.text.trim().isNotEmpty &&
+        _confirmPasswordController.text.trim().isNotEmpty;
 
     return Scaffold(
-      backgroundColor: AppColors.lightBlueBg,
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: Responsive.screenPadding(context),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxWidth),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primaryBlue.withOpacity(0.08),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                  border: Border.all(
-                    color: AppColors.primaryBlue.withOpacity(0.06),
-                  ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 72,
-                      width: 72,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBlue.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      child: const Icon(
-                        Icons.mark_email_read_rounded,
-                        color: AppColors.primaryBlue,
-                        size: 38,
-                      ),
-                    ),
-                    const SizedBox(height: 22),
-                    const Text(
-                      'Check Your Email',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      email == null || email!.isEmpty
-                          ? 'We have sent a password reset link to your email address. Open the email, reset your password, then come back and login again.'
-                          : 'We have sent a password reset link to $email. Open the email, reset your password, then come back and login again.',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    CommonPrimaryButton(
-                      text: 'Back to Login',
-                      icon: Icons.login_rounded,
-                      onPressed: () => context.go(RouteNames.login),
-                    ),
-                    const SizedBox(height: 14),
-                    CommonOutlineButton(
-                      onPressed: () => context.go(RouteNames.forgotPassword),
-                      text: 'Send Again',
-                      icon: Icons.refresh_rounded,
-                    ),
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            22,
+            18,
+            22,
+            AppConstants.paddingLarge,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AuthBackCircleButton(
+                onTap: () => context.pop(),
+                backgroundColor: AppColors.textPrimary,
+              ),
+              const SizedBox(height: AppConstants.paddingLarge),
+              Text(
+                'Reset Password',
+                style: TextStyleHelper.headlineSmall.copyWith(
+                  color: AppColors.black,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-            ),
+              const SizedBox(height: AppConstants.paddingSmall),
+              Text(
+                'Create your new password to continue.',
+                style: TextStyleHelper.bodySmall.copyWith(
+                  color: kTextLight,
+                ),
+              ),
+              const SizedBox(height: 28),
+              AppTextField(
+                controller: _passwordController,
+                hint: 'New Password',
+                obscureText: _obscurePassword,
+                onChanged: (_) => setState(() {}),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_off_rounded
+                        : Icons.visibility_rounded,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppConstants.paddingMedium),
+              AppTextField(
+                controller: _confirmPasswordController,
+                hint: 'Confirm Password',
+                obscureText: _obscureConfirmPassword,
+                onChanged: (_) => setState(() {}),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                  icon: Icon(
+                    _obscureConfirmPassword
+                        ? Icons.visibility_off_rounded
+                        : Icons.visibility_rounded,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              CommonPrimaryButton(
+                text: 'Reset Password',
+                icon: Icons.lock_reset_rounded,
+                onPressed: isButtonEnabled ? _resetPassword : null,
+              ),
+            ],
           ),
         ),
       ),

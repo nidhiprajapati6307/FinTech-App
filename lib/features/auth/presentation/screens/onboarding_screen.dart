@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/text_style.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -53,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       await _completeOnboarding();
     } else {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: AppConstants.animationDurationNormal,
         curve: Curves.easeInOut,
       );
     }
@@ -79,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppConstants.paddingSmall),
                   Expanded(
                     child: PageView.builder(
                       controller: _pageController,
@@ -100,7 +102,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 12),
                   _buildBottomBar(),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppConstants.paddingSmall),
                 ],
               ),
             ),
@@ -109,7 +111,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-
 
   Widget _buildBottomBar() {
     final isLastPage = _currentIndex == _pages.length - 1;
@@ -121,12 +122,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 6),
           ),
-          child: const Text(
+          child: Text(
             'Skip',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            style: TextStyleHelper.labelMedium.copyWith(
               color: AppColors.primaryBlue,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -135,7 +135,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: List.generate(
             _pages.length,
                 (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
+              duration: AppConstants.animationDurationFast,
               margin: const EdgeInsets.only(right: 6),
               height: 7,
               width: _currentIndex == index ? 20 : 7,
@@ -212,7 +212,8 @@ class _OnboardingPage extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: AppColors.lightBlueBg,
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius:
+                      BorderRadius.circular(AppConstants.radiusXLarge + 8),
                     ),
                     child: const Icon(
                       Icons.account_balance_wallet_outlined,
@@ -230,7 +231,7 @@ class _OnboardingPage extends StatelessWidget {
             child: Text(
               item.title,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: TextStyleHelper.headlineSmall.copyWith(
                 fontSize: isTablet ? 30 : 20,
                 fontWeight: FontWeight.w800,
                 height: 1.35,
@@ -244,7 +245,7 @@ class _OnboardingPage extends StatelessWidget {
             child: Text(
               item.description,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: TextStyleHelper.bodySmall.copyWith(
                 fontSize: isTablet ? 17 : 15,
                 height: 1.6,
                 color: AppColors.textSecondary,

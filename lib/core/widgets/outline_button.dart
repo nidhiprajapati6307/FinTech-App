@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import '../utils/text_style.dart';
 
 class CommonOutlineButton extends StatelessWidget {
   final String text;
@@ -9,7 +10,7 @@ class CommonOutlineButton extends StatelessWidget {
   const CommonOutlineButton({
     super.key,
     required this.text,
-    required this.icon,
+    this.icon,
     required this.onPressed,
   });
 
@@ -18,7 +19,7 @@ class CommonOutlineButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 54,
-      child: OutlinedButton.icon(
+      child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white,
           side: const BorderSide(
@@ -30,16 +31,24 @@ class CommonOutlineButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        icon: Icon(
-          icon,
-          color: AppColors.primaryBlue,
-        ),
-        label: Text(
-          text,
-          style: const TextStyle(
-            color: AppColors.primaryBlue,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                color: AppColors.primaryBlue,
+              ),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              text,
+              style: TextStyleHelper.labelLarge.copyWith(
+                color: AppColors.primaryBlue,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

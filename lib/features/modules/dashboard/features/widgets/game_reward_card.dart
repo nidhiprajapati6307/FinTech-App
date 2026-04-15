@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class GameRewardCard extends StatelessWidget {
   final String title;
@@ -18,7 +19,7 @@ class GameRewardCard extends StatelessWidget {
     return Container(
       width: 190,
       margin: const EdgeInsets.only(right: 14),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppConstants.paddingMedium),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -44,7 +45,7 @@ class GameRewardCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyleHelper.labelMedium.copyWith(
               fontSize: 15,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
@@ -53,8 +54,8 @@ class GameRewardCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             reward,
-            style: const TextStyle(
-              color: Color(0xff12A36D),
+            style: TextStyleHelper.labelMedium.copyWith(
+              color: const Color(0xff12A36D),
               fontWeight: FontWeight.w700,
             ),
           ),

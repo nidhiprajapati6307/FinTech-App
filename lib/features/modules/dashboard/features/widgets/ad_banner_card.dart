@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/app_colors.dart';
+import '../../../../../core/utils/text_style.dart';
 
 class AdBannerCard extends StatelessWidget {
   final String title;
@@ -16,7 +17,7 @@ class AdBannerCard extends StatelessWidget {
     return Container(
       width: 280,
       margin: const EdgeInsets.only(right: 14),
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(AppConstants.paddingLarge - 6),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
@@ -40,7 +41,7 @@ class AdBannerCard extends StatelessWidget {
           const Spacer(),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyleHelper.labelLarge.copyWith(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -49,7 +50,7 @@ class AdBannerCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyleHelper.bodySmall.copyWith(
               color: Colors.white70,
               fontSize: 13,
             ),

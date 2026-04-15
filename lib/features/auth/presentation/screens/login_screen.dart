@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/route_names.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/text_style.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/auth_shell.dart';
@@ -64,7 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: AppColors.primaryBlue,
                   content: Text(
                     state.error!,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyleHelper.labelMedium.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               );
@@ -78,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(AppConstants.paddingLarge),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),
@@ -120,13 +123,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: AppColors.primaryBlue,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppConstants.paddingMedium),
                         AppTextField(
                           controller: _passwordController,
                           hint: 'Password',
                           label: 'Password',
                           obscureText: _obscurePassword,
                           validator: Validators.validatePassword,
+                          onChanged: (_) => setState(() {}),
                           prefixIcon: const Icon(
                             Icons.lock_outline_rounded,
                             color: AppColors.primaryBlue,
@@ -145,15 +149,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppConstants.paddingSmall),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () =>
                                 context.push(RouteNames.forgotPassword),
-                            child: const Text(
+                            child: Text(
                               'Forgot Password?',
-                              style: TextStyle(
+                              style: TextStyleHelper.labelMedium.copyWith(
                                 color: AppColors.primaryBlue,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -191,37 +195,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: AppConstants.paddingLarge),
                   CommonOutlineButton(
                     onPressed: () => context.push(RouteNames.register),
                     text: 'Create Account',
                     icon: Icons.person_add_alt_1_rounded,
-                  ),
-                  const SizedBox(height: 14),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    alignment: Alignment.center,
-                    child: TextButton.icon(
-                      onPressed: () => context.push(RouteNames.otp),
-                      icon: const Icon(
-                        Icons.sms_outlined,
-                        color: AppColors.primaryBlue,
-                        size: 20,
-                      ),
-                      label: const Text(
-                        'Login with OTP',
-                        style: TextStyle(
-                          color: AppColors.primaryBlue,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
